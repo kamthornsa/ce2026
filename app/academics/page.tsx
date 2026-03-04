@@ -10,7 +10,7 @@ export const metadata = generateSEO({
     "Explore our comprehensive range of Computer Engineering programs from Bachelor to Doctoral level.",
   path: "/academics",
 });
-export const dynamic = "force-dynamic";
+
 export const revalidate = 0;
 
 export default async function AcademicsPage() {
