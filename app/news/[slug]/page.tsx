@@ -23,7 +23,7 @@ export async function generateStaticParams() {
     take: 100, // Generate top 100 posts at build time
   });
 
-  return posts.map((post) => ({
+  return posts.map((post: { slug: string }) => ({
     slug: post.slug,
   }));
 }

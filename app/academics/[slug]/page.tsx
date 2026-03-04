@@ -17,7 +17,7 @@ export async function generateStaticParams() {
     select: { slug: true },
   });
 
-  return programs.map((program) => ({
+  return programs.map((program: { slug: string }) => ({
     slug: program.slug,
   }));
 }
