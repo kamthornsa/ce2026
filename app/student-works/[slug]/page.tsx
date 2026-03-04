@@ -9,15 +9,20 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const works = await prisma.student_works.findMany({
-    where: { is_published: true },
-    select: { slug: true },
-  });
+export const dynamicParams = true;
 
-  return works.map((work: { slug: string }) => ({
-    slug: work.slug,
-  }));
+export async function generateStaticParams() {
+  try {
+    const works = await prisma.student_works.findMany({
+      where: { is_published: true },
+      select: { slug: true },
+    });
+    return works.map((work: { slug: string }) => ({
+      slug: work.slug,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: PageProps) {

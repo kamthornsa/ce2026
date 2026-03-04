@@ -11,15 +11,20 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const faculty = await prisma.faculty.findMany({
-    where: { is_published: true },
-    select: { slug: true },
-  });
+export const dynamicParams = true;
 
-  return faculty.map((member: { slug: string }) => ({
-    slug: member.slug,
-  }));
+export async function generateStaticParams() {
+  try {
+    const faculty = await prisma.faculty.findMany({
+      where: { is_published: true },
+      select: { slug: true },
+    });
+    return faculty.map((member: { slug: string }) => ({
+      slug: member.slug,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: PageProps) {

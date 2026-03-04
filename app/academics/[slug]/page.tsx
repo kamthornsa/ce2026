@@ -10,16 +10,20 @@ interface PageProps {
 
 // Revalidate every 24 hours (ISR)
 export const revalidate = 86400;
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const programs = await prisma.programs.findMany({
-    where: { is_published: true },
-    select: { slug: true },
-  });
-
-  return programs.map((program: { slug: string }) => ({
-    slug: program.slug,
-  }));
+  try {
+    const programs = await prisma.programs.findMany({
+      where: { is_published: true },
+      select: { slug: true },
+    });
+    return programs.map((program: { slug: string }) => ({
+      slug: program.slug,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: PageProps) {

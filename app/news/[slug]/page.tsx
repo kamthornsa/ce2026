@@ -15,17 +15,21 @@ interface PageProps {
 
 // Revalidate every hour (ISR)
 export const revalidate = 3600;
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const posts = await prisma.posts.findMany({
-    where: { is_published: true },
-    select: { slug: true },
-    take: 100, // Generate top 100 posts at build time
-  });
-
-  return posts.map((post: { slug: string }) => ({
-    slug: post.slug,
-  }));
+  try {
+    const posts = await prisma.posts.findMany({
+      where: { is_published: true },
+      select: { slug: true },
+      take: 100,
+    });
+    return posts.map((post: { slug: string }) => ({
+      slug: post.slug,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: PageProps) {
