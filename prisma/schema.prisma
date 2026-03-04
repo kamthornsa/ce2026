@@ -1,0 +1,293 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["academic", "content", "public", "system"]
+}
+
+model courses {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  program_id       String?   @db.Uuid
+  course_code      String?
+  course_name_th   String?
+  course_name_en   String
+  description_html String?
+  credits          Decimal?  @db.Decimal(3, 1)
+  year_no          Int?
+  term_no          Int?
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime  @default(now()) @db.Timestamptz(6)
+  programs         programs? @relation(fields: [program_id], references: [id], onUpdate: NoAction)
+
+  @@index([course_code], map: "idx_courses_code")
+  @@index([program_id], map: "idx_courses_program")
+  @@schema("academic")
+}
+
+model faculty {
+  id                              String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  full_name_th                    String?
+  full_name_en                    String
+  slug                            String                   @unique
+  academic_position               String?
+  job_title                       String?
+  degrees                         String?
+  expertise_keywords              String?
+  bio_html                        String?
+  email                           String?                  @db.Citext
+  phone                           String?
+  office_location                 String?
+  profile_image_id                String?                  @db.Uuid
+  scholar_url                     String?
+  scopus_url                      String?
+  researchgate_url                String?
+  orcid_url                       String?
+  meta_title                      String?
+  meta_description                String?
+  is_published                    Boolean                  @default(true)
+  sort_order                      Int                      @default(0)
+  created_by                      String?                  @db.Uuid
+  updated_by                      String?                  @db.Uuid
+  created_at                      DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at                      DateTime                 @default(now()) @db.Timestamptz(6)
+  search_tsv                      Unsupported("tsvector")?
+  users_faculty_created_byTousers users?                   @relation("faculty_created_byTousers", fields: [created_by], references: [id], onUpdate: NoAction)
+  media_assets                    media_assets?            @relation(fields: [profile_image_id], references: [id], onUpdate: NoAction)
+  users_faculty_updated_byTousers users?                   @relation("faculty_updated_byTousers", fields: [updated_by], references: [id], onUpdate: NoAction)
+
+  @@index([is_published, sort_order, full_name_en], map: "idx_faculty_published_order")
+  @@index([search_tsv], map: "idx_faculty_tsv_gin", type: Gin)
+  @@schema("academic")
+}
+
+model program_files {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  program_id   String       @db.Uuid
+  title        String
+  file_id      String       @db.Uuid
+  file_type    String       @default("pdf")
+  sort_order   Int          @default(0)
+  created_at   DateTime     @default(now()) @db.Timestamptz(6)
+  media_assets media_assets @relation(fields: [file_id], references: [id], onUpdate: NoAction)
+  programs     programs     @relation(fields: [program_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([program_id, sort_order], map: "idx_program_files_program")
+  @@schema("academic")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model programs {
+  id                               String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  level                            String
+  name_th                          String?
+  name_en                          String
+  slug                             String                   @unique
+  overview_html                    String?
+  study_plan_html                  String?
+  meta_title                       String?
+  meta_description                 String?
+  is_published                     Boolean                  @default(true)
+  sort_order                       Int                      @default(0)
+  created_by                       String?                  @db.Uuid
+  updated_by                       String?                  @db.Uuid
+  created_at                       DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at                       DateTime                 @default(now()) @db.Timestamptz(6)
+  search_tsv                       Unsupported("tsvector")?
+  courses                          courses[]
+  program_files                    program_files[]
+  users_programs_created_byTousers users?                   @relation("programs_created_byTousers", fields: [created_by], references: [id], onUpdate: NoAction)
+  users_programs_updated_byTousers users?                   @relation("programs_updated_byTousers", fields: [updated_by], references: [id], onUpdate: NoAction)
+
+  @@index([is_published, sort_order, level], map: "idx_programs_published_order")
+  @@index([search_tsv], map: "idx_programs_tsv_gin", type: Gin)
+  @@schema("academic")
+}
+
+model contact_messages {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  email      String   @db.Citext
+  subject    String?
+  message    String
+  ip_address String?  @db.Inet
+  user_agent String?
+  status     String   @default("new")
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([status, created_at(sort: Desc)], map: "idx_contact_messages_status")
+  @@schema("content")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model media_assets {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  file_path           String
+  original_name       String?
+  mime_type           String
+  file_size_bytes     BigInt
+  width               Int?
+  height              Int?
+  alt_text            String?
+  title_text          String?
+  metadata            Json                  @default("{}")
+  created_by          String?               @db.Uuid
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  faculty             faculty[]
+  program_files       program_files[]
+  users               users?                @relation(fields: [created_by], references: [id], onUpdate: NoAction)
+  pages               pages[]
+  posts               posts[]
+  student_work_assets student_work_assets[]
+  student_works       student_works[]
+
+  @@index([created_at(sort: Desc)], map: "idx_media_assets_created_at")
+  @@index([mime_type], map: "idx_media_assets_mime")
+  @@schema("content")
+}
+
+model pages {
+  id                            String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title                         String
+  slug                          String                   @unique
+  html_content                  String
+  meta_title                    String?
+  meta_description              String?
+  cover_image_id                String?                  @db.Uuid
+  is_published                  Boolean                  @default(false)
+  published_at                  DateTime?                @db.Timestamptz(6)
+  created_by                    String?                  @db.Uuid
+  updated_by                    String?                  @db.Uuid
+  created_at                    DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at                    DateTime                 @default(now()) @db.Timestamptz(6)
+  search_tsv                    Unsupported("tsvector")?
+  media_assets                  media_assets?            @relation(fields: [cover_image_id], references: [id], onUpdate: NoAction)
+  users_pages_created_byTousers users?                   @relation("pages_created_byTousers", fields: [created_by], references: [id], onUpdate: NoAction)
+  users_pages_updated_byTousers users?                   @relation("pages_updated_byTousers", fields: [updated_by], references: [id], onUpdate: NoAction)
+
+  @@index([is_published, published_at(sort: Desc)], map: "idx_pages_published")
+  @@index([search_tsv], map: "idx_pages_tsv_gin", type: Gin)
+  @@schema("content")
+}
+
+model post_tags {
+  post_id String @db.Uuid
+  tag_id  String @db.Uuid
+  posts   posts  @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tags    tags   @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([post_id, tag_id])
+  @@schema("content")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model posts {
+  id                            String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type                          String
+  title                         String
+  slug                          String                   @unique
+  excerpt                       String?
+  html_content                  String
+  thumbnail_id                  String?                  @db.Uuid
+  event_start_at                DateTime?                @db.Timestamptz(6)
+  event_end_at                  DateTime?                @db.Timestamptz(6)
+  meta_title                    String?
+  meta_description              String?
+  is_published                  Boolean                  @default(false)
+  published_at                  DateTime?                @db.Timestamptz(6)
+  created_by                    String?                  @db.Uuid
+  updated_by                    String?                  @db.Uuid
+  created_at                    DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at                    DateTime                 @default(now()) @db.Timestamptz(6)
+  search_tsv                    Unsupported("tsvector")?
+  post_tags                     post_tags[]
+  users_posts_created_byTousers users?                   @relation("posts_created_byTousers", fields: [created_by], references: [id], onUpdate: NoAction)
+  media_assets                  media_assets?            @relation(fields: [thumbnail_id], references: [id], onUpdate: NoAction)
+  users_posts_updated_byTousers users?                   @relation("posts_updated_byTousers", fields: [updated_by], references: [id], onUpdate: NoAction)
+
+  @@index([search_tsv], map: "idx_posts_tsv_gin", type: Gin)
+  @@index([type, is_published, published_at(sort: Desc)], map: "idx_posts_type_published")
+  @@schema("content")
+}
+
+model student_work_assets {
+  work_id       String        @db.Uuid
+  file_id       String        @db.Uuid
+  caption       String?
+  sort_order    Int           @default(0)
+  media_assets  media_assets  @relation(fields: [file_id], references: [id], onUpdate: NoAction)
+  student_works student_works @relation(fields: [work_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([work_id, file_id])
+  @@index([work_id, sort_order], map: "idx_student_work_assets_order")
+  @@schema("content")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model student_works {
+  id                                    String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title                                 String
+  slug                                  String                   @unique
+  academic_year                         Int
+  work_type                             String                   @default("project")
+  summary                               String?
+  html_content                          String?
+  cover_image_id                        String?                  @db.Uuid
+  meta_title                            String?
+  meta_description                      String?
+  is_published                          Boolean                  @default(false)
+  published_at                          DateTime?                @db.Timestamptz(6)
+  created_by                            String?                  @db.Uuid
+  updated_by                            String?                  @db.Uuid
+  created_at                            DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at                            DateTime                 @default(now()) @db.Timestamptz(6)
+  search_tsv                            Unsupported("tsvector")?
+  student_work_assets                   student_work_assets[]
+  media_assets                          media_assets?            @relation(fields: [cover_image_id], references: [id], onUpdate: NoAction)
+  users_student_works_created_byTousers users?                   @relation("student_works_created_byTousers", fields: [created_by], references: [id], onUpdate: NoAction)
+  users_student_works_updated_byTousers users?                   @relation("student_works_updated_byTousers", fields: [updated_by], references: [id], onUpdate: NoAction)
+
+  @@index([is_published, published_at(sort: Desc)], map: "idx_student_works_published")
+  @@index([search_tsv], map: "idx_student_works_tsv_gin", type: Gin)
+  @@index([academic_year(sort: Desc), work_type], map: "idx_student_works_year_type")
+  @@schema("content")
+}
+
+model tags {
+  id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String      @unique
+  slug       String      @unique
+  created_at DateTime    @default(now()) @db.Timestamptz(6)
+  post_tags  post_tags[]
+
+  @@schema("content")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model users {
+  id                                            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                                         String          @unique @db.Citext
+  password_hash                                 String
+  full_name                                     String
+  role                                          String          @default("admin")
+  is_active                                     Boolean         @default(true)
+  last_login_at                                 DateTime?       @db.Timestamptz(6)
+  created_at                                    DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at                                    DateTime        @default(now()) @db.Timestamptz(6)
+  faculty_faculty_created_byTousers             faculty[]       @relation("faculty_created_byTousers")
+  faculty_faculty_updated_byTousers             faculty[]       @relation("faculty_updated_byTousers")
+  programs_programs_created_byTousers           programs[]      @relation("programs_created_byTousers")
+  programs_programs_updated_byTousers           programs[]      @relation("programs_updated_byTousers")
+  media_assets                                  media_assets[]
+  pages_pages_created_byTousers                 pages[]         @relation("pages_created_byTousers")
+  pages_pages_updated_byTousers                 pages[]         @relation("pages_updated_byTousers")
+  posts_posts_created_byTousers                 posts[]         @relation("posts_created_byTousers")
+  posts_posts_updated_byTousers                 posts[]         @relation("posts_updated_byTousers")
+  student_works_student_works_created_byTousers student_works[] @relation("student_works_created_byTousers")
+  student_works_student_works_updated_byTousers student_works[] @relation("student_works_updated_byTousers")
+
+  @@schema("system")
+}
