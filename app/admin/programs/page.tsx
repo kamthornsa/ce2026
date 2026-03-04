@@ -15,6 +15,7 @@ export default async function ProgramsListPage() {
       },
     },
   });
+  type ProgramRow = (typeof programs)[number];
 
   return (
     <div>
@@ -48,19 +49,19 @@ export default async function ProgramsListPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <p className="text-gray-600 text-sm">Undergraduate</p>
           <p className="text-3xl font-bold text-blue-600 mt-1">
-            {programs.filter((p) => p.level === "bachelor").length}
+            {programs.filter((p: ProgramRow) => p.level === "bachelor").length}
           </p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <p className="text-gray-600 text-sm">Master's</p>
           <p className="text-3xl font-bold text-purple-600 mt-1">
-            {programs.filter((p) => p.level === "master").length}
+            {programs.filter((p: ProgramRow) => p.level === "master").length}
           </p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <p className="text-gray-600 text-sm">Doctoral</p>
           <p className="text-3xl font-bold text-pink-600 mt-1">
-            {programs.filter((p) => p.level === "doctoral").length}
+            {programs.filter((p: ProgramRow) => p.level === "doctoral").length}
           </p>
         </div>
       </div>

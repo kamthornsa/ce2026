@@ -238,9 +238,11 @@ export default async function FacultyDetailPage({ params }: PageProps) {
                 <div className="mb-6">
                   <h2 className="text-xl font-semibold mb-3">Education</h2>
                   <div className="prose max-w-none text-gray-700">
-                    {faculty.degrees.split("\n").map((degree, idx) => (
-                      <p key={idx}>{degree}</p>
-                    ))}
+                    {faculty.degrees
+                      .split("\n")
+                      .map((degree: string, idx: number) => (
+                        <p key={idx}>{degree}</p>
+                      ))}
                   </div>
                 </div>
               )}
@@ -253,7 +255,7 @@ export default async function FacultyDetailPage({ params }: PageProps) {
                   <div className="flex flex-wrap gap-2">
                     {faculty.expertise_keywords
                       .split(",")
-                      .map((keyword, idx) => (
+                      .map((keyword: string, idx: number) => (
                         <span
                           key={idx}
                           className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm"

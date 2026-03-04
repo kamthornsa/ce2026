@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 // PUT /api/admin/contact-messages/[id] - Update status
 export async function PUT(
   req: NextRequest,

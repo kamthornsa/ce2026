@@ -73,6 +73,8 @@ export default async function StudentWorkDetailPage({ params }: PageProps) {
     { name: work.title, url: `/student-works/${work.slug}` },
   ]);
 
+  type WorkAssetItem = (typeof work.student_work_assets)[number];
+
   return (
     <div className="py-16">
       {/* JSON-LD Structured Data */}
@@ -150,33 +152,35 @@ export default async function StudentWorkDetailPage({ params }: PageProps) {
               <div className="mb-12">
                 <h2 className="text-2xl font-bold mb-6">Gallery</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {work.student_work_assets.map((asset, index) => (
-                    <div
-                      key={`${asset.work_id}-${asset.file_id}`}
-                      className="space-y-2"
-                    >
-                      {asset.media_assets?.file_path ? (
-                        <div className="w-full aspect-video rounded-lg overflow-hidden">
-                          <img
-                            src={asset.media_assets.file_path}
-                            alt={
-                              asset.caption ||
-                              asset.media_assets.alt_text ||
-                              `Image ${index + 1}`
-                            }
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-full aspect-video bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg"></div>
-                      )}
-                      {asset.caption && (
-                        <p className="text-sm text-gray-600 text-center">
-                          {asset.caption}
-                        </p>
-                      )}
-                    </div>
-                  ))}
+                  {work.student_work_assets.map(
+                    (asset: WorkAssetItem, index: number) => (
+                      <div
+                        key={`${asset.work_id}-${asset.file_id}`}
+                        className="space-y-2"
+                      >
+                        {asset.media_assets?.file_path ? (
+                          <div className="w-full aspect-video rounded-lg overflow-hidden">
+                            <img
+                              src={asset.media_assets.file_path}
+                              alt={
+                                asset.caption ||
+                                asset.media_assets.alt_text ||
+                                `Image ${index + 1}`
+                              }
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-full aspect-video bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg"></div>
+                        )}
+                        {asset.caption && (
+                          <p className="text-sm text-gray-600 text-center">
+                            {asset.caption}
+                          </p>
+                        )}
+                      </div>
+                    ),
+                  )}
                 </div>
               </div>
             )}

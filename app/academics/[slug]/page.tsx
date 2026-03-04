@@ -74,11 +74,12 @@ export default async function ProgramDetailPage({ params }: PageProps) {
   ]);
 
   // Group courses by year and term
+  type CourseItem = (typeof program.courses)[number];
   const coursesByYear: Record<
     number,
     Record<number, typeof program.courses>
   > = {};
-  program.courses.forEach((course) => {
+  program.courses.forEach((course: CourseItem) => {
     const year = course.year_no || 0;
     const term = course.term_no || 0;
     if (!coursesByYear[year]) coursesByYear[year] = {};
@@ -162,7 +163,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                             Term {term}
                           </h4>
                           <div className="space-y-2">
-                            {courses.map((course) => (
+                            {courses.map((course: CourseItem) => (
                               <div
                                 key={course.id}
                                 className="bg-white border rounded-lg p-4 hover:border-purple-300 transition-colors"
@@ -212,31 +213,33 @@ export default async function ProgramDetailPage({ params }: PageProps) {
             <section className="mb-12">
               <h2 className="text-2xl font-bold mb-4">Downloads</h2>
               <div className="space-y-3">
-                {program.program_files.map((file) => (
-                  <a
-                    key={file.id}
-                    href={file.media_assets.file_path}
-                    download
-                    className="flex items-center justify-between p-4 bg-gray-50 border rounded-lg hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="flex items-center">
-                      <Download className="h-5 w-5 text-purple-600 mr-3" />
-                      <div>
-                        <p className="font-semibold">{file.title}</p>
-                        <p className="text-sm text-gray-600">
-                          {file.file_type.toUpperCase()} •{" "}
-                          {(
-                            Number(file.media_assets.file_size_bytes) /
-                            1024 /
-                            1024
-                          ).toFixed(2)}{" "}
-                          MB
-                        </p>
+                {program.program_files.map(
+                  (file: (typeof program.program_files)[number]) => (
+                    <a
+                      key={file.id}
+                      href={file.media_assets.file_path}
+                      download
+                      className="flex items-center justify-between p-4 bg-gray-50 border rounded-lg hover:bg-gray-100 transition-colors"
+                    >
+                      <div className="flex items-center">
+                        <Download className="h-5 w-5 text-purple-600 mr-3" />
+                        <div>
+                          <p className="font-semibold">{file.title}</p>
+                          <p className="text-sm text-gray-600">
+                            {file.file_type.toUpperCase()} •{" "}
+                            {(
+                              Number(file.media_assets.file_size_bytes) /
+                              1024 /
+                              1024
+                            ).toFixed(2)}{" "}
+                            MB
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    <Download className="h-5 w-5 text-gray-400" />
-                  </a>
-                ))}
+                      <Download className="h-5 w-5 text-gray-400" />
+                    </a>
+                  ),
+                )}
               </div>
             </section>
           )}

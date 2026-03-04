@@ -21,8 +21,9 @@ export default async function StudentWorksPage() {
     distinct: ["academic_year"],
     orderBy: { academic_year: "desc" },
   });
+  type WorkYearRow = (typeof works)[number];
 
-  const years = works.map((w) => w.academic_year);
+  const years = works.map((w: WorkYearRow) => w.academic_year);
 
   return (
     <div>

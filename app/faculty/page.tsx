@@ -32,6 +32,7 @@ export default async function FacultyPage() {
       },
     },
   });
+  type FacultyMember = (typeof faculty)[number];
 
   return (
     <div className="py-16">
@@ -41,7 +42,7 @@ export default async function FacultyPage() {
 
         {/* Faculty Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {faculty.map((member) => (
+          {faculty.map((member: FacultyMember) => (
             <Link key={member.id} href={`/faculty/${member.slug}`}>
               <article className="bg-white border rounded-lg overflow-hidden hover:shadow-lg transition-shadow group">
                 {/* Profile Image */}
@@ -85,7 +86,7 @@ export default async function FacultyPage() {
                         {member.expertise_keywords
                           .split(",")
                           .slice(0, 3)
-                          .map((keyword, idx) => (
+                          .map((keyword: string, idx: number) => (
                             <span
                               key={idx}
                               className="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded"

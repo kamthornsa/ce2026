@@ -45,7 +45,8 @@ export async function GET(req: NextRequest) {
     ]);
 
     // Convert BigInt to string for JSON serialization
-    const serializedMedia = media.map(item => ({
+    type MediaItem = (typeof media)[number];
+    const serializedMedia = media.map((item: MediaItem) => ({
       ...item,
       file_size_bytes: item.file_size_bytes.toString(),
     }));

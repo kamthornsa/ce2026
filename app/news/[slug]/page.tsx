@@ -201,7 +201,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
                   Tags
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {post.post_tags.map((pt) => (
+                  {post.post_tags.map((pt: (typeof post.post_tags)[number]) => (
                     <Link
                       key={pt.tag_id}
                       href={`/news?tag=${pt.tags.slug}`}

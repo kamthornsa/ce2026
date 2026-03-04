@@ -7,6 +7,7 @@ export default async function FacultyListPage() {
   const faculty = await prisma.faculty.findMany({
     orderBy: [{ sort_order: "asc" }, { full_name_en: "asc" }],
   });
+  type FacultyRow = (typeof faculty)[number];
 
   return (
     <div>
@@ -40,19 +41,19 @@ export default async function FacultyListPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <p className="text-gray-600 text-sm">Published</p>
           <p className="text-3xl font-bold text-green-600 mt-1">
-            {faculty.filter((f) => f.is_published).length}
+            {faculty.filter((f: FacultyRow) => f.is_published).length}
           </p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <p className="text-gray-600 text-sm">Draft</p>
           <p className="text-3xl font-bold text-gray-600 mt-1">
-            {faculty.filter((f) => !f.is_published).length}
+            {faculty.filter((f: FacultyRow) => !f.is_published).length}
           </p>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <p className="text-gray-600 text-sm">With Email</p>
           <p className="text-3xl font-bold text-blue-600 mt-1">
-            {faculty.filter((f) => f.email).length}
+            {faculty.filter((f: FacultyRow) => f.email).length}
           </p>
         </div>
       </div>

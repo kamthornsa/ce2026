@@ -48,6 +48,7 @@ export default async function AdminDashboard() {
       created_at: true,
     },
   });
+  type RecentPost = (typeof recentPosts)[number];
 
   const statCards = [
     {
@@ -131,7 +132,7 @@ export default async function AdminDashboard() {
           </div>
           <div className="p-6">
             <div className="space-y-4">
-              {recentPosts.map((post) => (
+              {recentPosts.map((post: RecentPost) => (
                 <div key={post.id} className="flex items-start justify-between">
                   <div className="flex-1">
                     <p className="font-medium text-gray-900">{post.title}</p>

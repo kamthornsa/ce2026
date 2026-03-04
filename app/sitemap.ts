@@ -56,7 +56,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     select: { slug: true, updated_at: true },
   });
 
-  const facultyPages = faculty.map((member) => ({
+  type FacultyEntry = (typeof faculty)[number];
+  const facultyPages = faculty.map((member: FacultyEntry) => ({
     url: `${SITE_URL}/faculty/${member.slug}`,
     lastModified: member.updated_at,
     changeFrequency: 'monthly' as const,
@@ -69,7 +70,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     select: { slug: true, updated_at: true },
   });
 
-  const programPages = programs.map((program) => ({
+  type ProgramEntry = (typeof programs)[number];
+  const programPages = programs.map((program: ProgramEntry) => ({
     url: `${SITE_URL}/academics/${program.slug}`,
     lastModified: program.updated_at,
     changeFrequency: 'monthly' as const,
@@ -84,7 +86,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     take: 500,
   });
 
-  const newsPages = posts.map((post) => ({
+  type PostEntry = (typeof posts)[number];
+  const newsPages = posts.map((post: PostEntry) => ({
     url: `${SITE_URL}/news/${post.slug}`,
     lastModified: post.updated_at,
     changeFrequency: 'monthly' as const,
@@ -98,7 +101,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     take: 200,
   });
 
-  const workPages = works.map((work) => ({
+  type WorkEntry = (typeof works)[number];
+  const workPages = works.map((work: WorkEntry) => ({
     url: `${SITE_URL}/student-works/${work.slug}`,
     lastModified: work.updated_at,
     changeFrequency: 'monthly' as const,

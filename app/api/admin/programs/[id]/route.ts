@@ -56,9 +56,10 @@ export async function GET(
       return NextResponse.json({ error: 'Program not found' }, { status: 404 });
     }
 
+    type ProgramFile = (typeof program.program_files)[number];
     const sanitized = {
       ...program,
-      program_files: program.program_files.map(file => ({
+      program_files: program.program_files.map((file: ProgramFile) => ({
         ...file,
         media_assets: file.media_assets
           ? {
