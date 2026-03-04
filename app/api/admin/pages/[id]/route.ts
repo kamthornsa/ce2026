@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
 const pageSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   html_content: z.string().min(1, 'Content is required'),

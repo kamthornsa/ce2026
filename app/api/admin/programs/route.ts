@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import { z } from 'zod';
 import slugify from 'slugify';
 
+export const dynamic = 'force-dynamic';
 // Validation schemas
 const programSchema = z.object({
   name_en: z.string().min(1, 'Name (English) is required'),

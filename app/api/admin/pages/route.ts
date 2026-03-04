@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import { z } from 'zod';
 import slugify from 'slugify';
 
+export const dynamic = 'force-dynamic';
 const pageSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   html_content: z.string().min(1, 'Content is required'),

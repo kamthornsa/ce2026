@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import { z } from 'zod';
 import slugify from 'slugify';
 
+export const dynamic = 'force-dynamic';
 const facultySchema = z.object({
   full_name_th: z.string().optional().nullable(),
   full_name_en: z.string().min(1, 'English name is required'),

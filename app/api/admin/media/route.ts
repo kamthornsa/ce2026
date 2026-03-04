@@ -7,6 +7,7 @@ import { existsSync } from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 
+export const dynamic = 'force-dynamic';
 // GET /api/admin/media
 export async function GET(req: NextRequest) {
   try {

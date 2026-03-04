@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
 const courseSchema = z.object({
   course_code: z.string().min(1, 'Course code is required'),
   course_name_en: z.string().min(1, 'Course name (English) is required'),

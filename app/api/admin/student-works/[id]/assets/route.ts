@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
 const assetSchema = z.object({
   file_id: z.string().uuid(),
   caption: z.string().optional().nullable(),

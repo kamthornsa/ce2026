@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
 
+export const dynamic = 'force-dynamic';
 const programSchema = z.object({
   name_en: z.string().min(1, 'Name (English) is required'),
   name_th: z.string().optional(),

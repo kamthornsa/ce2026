@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { unlink } from 'fs/promises';
 import path from 'path';
 
+export const dynamic = 'force-dynamic';
 const mediaSchema = z.object({
   alt_text: z.string().optional(),
   title_text: z.string().optional(),
