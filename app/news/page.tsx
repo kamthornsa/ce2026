@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db";
 import { generateSEO } from "@/lib/seo";
 import NewsContent from "./NewsContent";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = generateSEO({
   title: "News & Events",
   description:

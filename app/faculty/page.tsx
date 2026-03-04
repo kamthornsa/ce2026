@@ -4,6 +4,8 @@ import { prisma } from "@/lib/db";
 import { generateSEO } from "@/lib/seo";
 import FacultyHeader from "./FacultyHeader";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = generateSEO({
   title: "Faculty",
   description:
