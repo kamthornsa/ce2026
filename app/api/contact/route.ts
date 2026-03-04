@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import nodemailer from 'nodemailer';
 
+export const dynamic = 'force-dynamic';
+
 // ─── Rate Limiter (in-memory) ────────────────────────────────────────────────
 const RATE_LIMIT_MAX = 3;          // จำนวนครั้งสูงสุด
 const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 นาที (ms)
