@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://ce.university.ac.th';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://ce.ksu.ac.th';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
