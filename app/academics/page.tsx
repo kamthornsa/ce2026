@@ -8,9 +8,8 @@ export const metadata = generateSEO({
     "Explore our comprehensive range of Computer Engineering programs from Bachelor to Doctoral level.",
   path: "/academics",
 });
-
-// Revalidate every 24 hours
-export const revalidate = 86400;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function AcademicsPage() {
   const programs = await prisma.programs.findMany({
