@@ -3,6 +3,7 @@ import { generateSEO } from "@/lib/seo";
 import StudentWorksContent from "./StudentWorksContent";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = generateSEO({
   title: "Student Works",

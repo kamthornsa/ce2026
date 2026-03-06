@@ -11,7 +11,7 @@ export const metadata = generateSEO({
   path: "/academics",
 });
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function AcademicsPage() {
   const programs = await prisma.programs.findMany({

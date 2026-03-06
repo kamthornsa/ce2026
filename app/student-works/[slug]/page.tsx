@@ -10,6 +10,7 @@ interface PageProps {
 }
 
 export const dynamicParams = true;
+export const revalidate = 60;
 
 export async function generateStaticParams() {
   try {

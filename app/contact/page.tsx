@@ -1,6 +1,8 @@
 import { generateSEO } from "@/lib/seo";
 import ContactContent from "./ContactContent";
 
+export const revalidate = 60;
+
 export const metadata = generateSEO({
   title: "Contact Us",
   description:

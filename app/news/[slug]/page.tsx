@@ -14,7 +14,7 @@ interface PageProps {
 }
 
 // Revalidate every hour (ISR)
-export const revalidate = 3600;
+export const revalidate = 60;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {

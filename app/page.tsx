@@ -5,6 +5,7 @@ import HeroSection from "@/app/components/HeroSection";
 import HomeContent from "@/app/components/HomeContent";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = generateSEO({
   title: "Computer Engineering Department",

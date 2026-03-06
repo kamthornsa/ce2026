@@ -1,6 +1,8 @@
 import { generateSEO } from "@/lib/seo";
 import AboutContent from "./AboutContent";
 
+export const revalidate = 60;
+
 export const metadata = generateSEO({
   title: "About Us",
   description:
