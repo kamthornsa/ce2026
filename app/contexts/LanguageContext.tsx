@@ -14,7 +14,7 @@ const translations = {
   th: {
     // Navigation
     "nav.home": "หน้าหลัก",
-    "nav.about": "เกี่ยวกับภาควิชา",
+    "nav.about": "เกี่ยวกับสาขาวิชา",
     "nav.faculty": "คณาจารย์",
     "nav.academics": "หลักสูตร",
     "nav.studentWorks": "ผลงานนักศึกษา",
@@ -37,7 +37,7 @@ const translations = {
     "footer.master": "ปริญญาโท",
     "footer.doctoral": "ปริญญาเอก",
     "footer.contact": "ติดต่อ",
-    "footer.office": "สำนักงานภาควิชา",
+    "footer.office": "สำนักงานสาขาวิชา",
     "footer.contactForm": "แบบฟอร์มติดต่อ",
     "footer.rights": "สงวนลิขสิทธิ์",
     "footer.excellence": "ความเป็นเลิศทางเทคโนโลยี",
@@ -55,7 +55,7 @@ const translations = {
     "home.focusArea2.title": "ผลงานนักศึกษาและโครงงาน",
     "home.focusArea2.desc": "ชมผลงานสร้างสรรค์และโครงงานนวัตกรรมจากนักศึกษา",
     "home.focusArea3.title": "กิจกรรมภายในสาขา",
-    "home.focusArea3.desc": "ติดตามข่าวสารและกิจกรรมล่าสุดของภาควิชา",
+    "home.focusArea3.desc": "ติดตามข่าวสารและกิจกรรมล่าสุดของสาขาวิชา",
 
     // Homepage Hero
     "home.hero.title": "วิศวกรรมคอมพิวเตอร์",
@@ -128,9 +128,9 @@ const translations = {
     "news.title.news": "ข่าวสาร",
     "news.title.event": "กิจกรรม",
     "news.desc.default":
-      "ติดตามข่าวสาร ความเคลื่อนไหว และประกาศล่าสุดจากภาควิชาวิศวกรรมคอมพิวเตอร์",
+      "ติดตามข่าวสาร ความเคลื่อนไหว และประกาศล่าสุดจากสาขาวิชาวิศวกรรมคอมพิวเตอร์",
     "news.desc.event":
-      "กิจกรรมทั้งที่กำลังจะมาถึงและที่ผ่านมาแล้วของภาควิชาวิศวกรรมคอมพิวเตอร์",
+      "กิจกรรมทั้งที่กำลังจะมาถึงและที่ผ่านมาแล้วของสาขาวิชาวิศวกรรมคอมพิวเตอร์",
     "news.filter.all": "ทั้งหมด",
     "news.filter.news": "ข่าวสาร",
     "news.filter.event": "กิจกรรม",

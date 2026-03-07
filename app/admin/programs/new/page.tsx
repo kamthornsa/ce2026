@@ -2,12 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Save, ArrowLeft } from "lucide-react";
+import { Save, ArrowLeft, Upload, FileText, Trash2 } from "lucide-react";
 import Link from "next/link";
+
+interface ProgramFileState {
+  file_id: string;
+  title: string;
+  sort_order: number;
+  original_name: string;
+}
 
 export default function NewProgramPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [programFiles, setProgramFiles] = useState<ProgramFileState[]>([]);
   const [formData, setFormData] = useState({
     name_en: "",
     name_th: "",
@@ -20,6 +29,41 @@ export default function NewProgramPage() {
     sort_order: 0,
   });
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.type !== "application/pdf") {
+      alert("Only PDF files are allowed");
+      e.target.value = "";
+      return;
+    }
+    setIsUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/media", { method: "POST", body: fd });
+      if (res.ok) {
+        const media = await res.json();
+        setProgramFiles((prev) => [
+          ...prev,
+          {
+            file_id: media.id,
+            title: file.name.replace(/\.pdf$/i, ""),
+            sort_order: prev.length,
+            original_name: media.original_name || file.name,
+          },
+        ]);
+      } else {
+        alert("Failed to upload file");
+      }
+    } catch {
+      alert("An error occurred while uploading");
+    } finally {
+      setIsUploading(false);
+      e.target.value = "";
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -28,7 +72,14 @@ export default function NewProgramPage() {
       const response = await fetch("/api/admin/programs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          program_files: programFiles.map(({ file_id, title, sort_order }) => ({
+            file_id,
+            title,
+            sort_order,
+          })),
+        }),
       });
 
       if (response.ok) {
@@ -161,6 +212,78 @@ export default function NewProgramPage() {
                   />
                 </div>
               </div>
+            </div>
+
+            {/* PDF Files */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold mb-4">PDF Files</h2>
+              {programFiles.length > 0 && (
+                <div className="space-y-2 mb-4">
+                  {programFiles.map((file, index) => (
+                    <div
+                      key={file.file_id}
+                      className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
+                    >
+                      <FileText className="h-5 w-5 text-red-500 flex-shrink-0" />
+                      <input
+                        type="text"
+                        value={file.title}
+                        onChange={(e) =>
+                          setProgramFiles((prev) =>
+                            prev.map((f, i) =>
+                              i === index ? { ...f, title: e.target.value } : f,
+                            ),
+                          )
+                        }
+                        className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-purple-500"
+                        placeholder="File title"
+                      />
+                      <span className="text-xs text-gray-500 truncate max-w-[8rem]">
+                        {file.original_name}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setProgramFiles((prev) =>
+                            prev.filter((_, i) => i !== index),
+                          )
+                        }
+                        className="text-red-500 hover:text-red-700 flex-shrink-0"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <label className="block cursor-pointer">
+                <input
+                  type="file"
+                  accept=".pdf,application/pdf"
+                  onChange={handleFileUpload}
+                  disabled={isUploading}
+                  className="hidden"
+                />
+                <div
+                  className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed rounded-lg transition-colors ${
+                    isUploading
+                      ? "border-gray-300 text-gray-400 cursor-not-allowed"
+                      : "border-purple-300 text-purple-600 hover:border-purple-500 hover:bg-purple-50 cursor-pointer"
+                  }`}
+                >
+                  {isUploading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-4 w-4" />
+                      Add PDF File
+                    </>
+                  )}
+                </div>
+              </label>
             </div>
 
             {/* SEO */}

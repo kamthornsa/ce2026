@@ -15,6 +15,11 @@ const programSchema = z.object({
   meta_description: z.string().optional(),
   is_published: z.boolean(),
   sort_order: z.number(),
+  program_files: z.array(z.object({
+    file_id: z.string().uuid(),
+    title: z.string().min(1),
+    sort_order: z.number().default(0),
+  })).optional().default([]),
 });
 
 // GET /api/admin/programs/[id] - Get a single program
@@ -91,16 +96,30 @@ export async function PUT(
 
     const { id } = await params;
     const body = await req.json();
-    const validated = programSchema.parse(body);
+    const { program_files: filesData, ...programBody } = programSchema.parse(body);
 
     const program = await prisma.programs.update({
       where: { id },
       data: {
-        ...validated,
+        ...programBody,
         updated_by: session.user.id,
         updated_at: new Date(),
       },
     });
+
+    // Sync program_files: delete all existing, then recreate
+    await prisma.program_files.deleteMany({ where: { program_id: id } });
+    if (filesData.length > 0) {
+      await prisma.program_files.createMany({
+        data: filesData.map((f) => ({
+          program_id: id,
+          file_id: f.file_id,
+          title: f.title,
+          sort_order: f.sort_order,
+          file_type: 'pdf',
+        })),
+      });
+    }
 
     return NextResponse.json(program);
   } catch (error) {

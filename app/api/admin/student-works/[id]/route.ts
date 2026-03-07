@@ -105,25 +105,10 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Check if work has assets
-    const work = await prisma.student_works.findUnique({
-      where: { id },
-      include: {
-        _count: {
-          select: { student_work_assets: true },
-        },
-      },
-    });
+    const work = await prisma.student_works.findUnique({ where: { id } });
 
     if (!work) {
       return NextResponse.json({ error: 'Student work not found' }, { status: 404 });
-    }
-
-    if (work._count.student_work_assets > 0) {
-      return NextResponse.json(
-        { error: 'Cannot delete work with assets. Delete them first.' },
-        { status: 400 }
-      );
     }
 
     await prisma.student_works.delete({

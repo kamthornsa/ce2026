@@ -17,6 +17,11 @@ const programSchema = z.object({
   meta_description: z.string().optional(),
   is_published: z.boolean().default(false),
   sort_order: z.number().default(0),
+  program_files: z.array(z.object({
+    file_id: z.string().uuid(),
+    title: z.string().min(1),
+    sort_order: z.number().default(0),
+  })).optional().default([]),
 });
 
 // GET /api/admin/programs - List all programs
@@ -88,10 +93,10 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const validated = programSchema.parse(body);
+    const { program_files: filesData, ...programBody } = programSchema.parse(body);
 
     // Generate slug
-    let baseSlug = slugify(validated.name_en, { lower: true, strict: true });
+    let baseSlug = slugify(programBody.name_en, { lower: true, strict: true });
     let slug = baseSlug;
     let counter = 1;
 
@@ -102,12 +107,24 @@ export async function POST(req: NextRequest) {
 
     const program = await prisma.programs.create({
       data: {
-        ...validated,
+        ...programBody,
         slug,
         created_by: session.user.id,
         updated_by: session.user.id,
       },
     });
+
+    if (filesData.length > 0) {
+      await prisma.program_files.createMany({
+        data: filesData.map((f) => ({
+          program_id: program.id,
+          file_id: f.file_id,
+          title: f.title,
+          sort_order: f.sort_order,
+          file_type: 'pdf',
+        })),
+      });
+    }
 
     return NextResponse.json(program, { status: 201 });
   } catch (error) {
