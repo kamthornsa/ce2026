@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Save, ArrowLeft, Upload, X, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function NewFacultyPage() {
   const router = useRouter();
@@ -424,26 +423,14 @@ export default function NewFacultyPage() {
 
               <div className="space-y-4">
                 {/* Image Preview */}
-                {previewUrl || formData.profile_image_id ? (
+                {previewUrl ? (
                   <div className="relative">
                     <div className="w-full aspect-square rounded-lg overflow-hidden bg-gray-100">
-                      {previewUrl ? (
-                        <Image
-                          src={previewUrl}
-                          alt="Profile preview"
-                          width={400}
-                          height={400}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : formData.profile_image_id ? (
-                        <Image
-                          src={`/uploads/${formData.profile_image_id}`}
-                          alt="Profile image"
-                          width={400}
-                          height={400}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : null}
+                      <img
+                        src={previewUrl}
+                        alt="Profile preview"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <button
                       type="button"

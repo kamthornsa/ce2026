@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { unlink } from 'fs/promises';
 import path from 'path';
 
+const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(process.cwd(), 'uploads');
+
 export const dynamic = 'force-dynamic';
 const mediaSchema = z.object({
   alt_text: z.string().optional(),
@@ -135,7 +137,7 @@ export async function DELETE(
 
     // Delete file from filesystem
     try {
-      const filepath = path.join(process.cwd(), 'public', media.file_path);
+      const filepath = path.join(UPLOAD_DIR, path.basename(media.file_path));
       await unlink(filepath);
     } catch (error) {
       console.error('Error deleting file:', error);

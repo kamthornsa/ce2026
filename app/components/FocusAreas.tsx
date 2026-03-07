@@ -9,7 +9,7 @@ const focusCards = [
   {
     href: "/academics",
     // TODO: replace with actual image path, e.g. "/images/focus-academics.jpg"
-    image: "/uploads/focus-academics.png",
+    image: "/api/uploads/focus-academics.png",
     overlayFrom: "from-[#233dff]/80",
     overlayTo: "to-[#1a2ecc]/60",
     accentColor: "bg-[#233dff]",
@@ -20,7 +20,7 @@ const focusCards = [
   {
     href: "/student-works",
     // TODO: replace with actual image path, e.g. "/images/focus-studentworks.jpg"
-    image: "/uploads/focus-studentworks.png",
+    image: "/api/uploads/focus-studentworks.png",
     overlayFrom: "from-[#bf3618]/85",
     overlayTo: "to-[#992b13]/65",
     accentColor: "bg-[#bf3618]",
@@ -31,7 +31,7 @@ const focusCards = [
   {
     href: "/news",
     // TODO: replace with actual image path, e.g. "/images/focus-news.jpg"
-    image: "/uploads/focus-news.png",
+    image: "/api/uploads/focus-news.png",
     overlayFrom: "from-[#233dff]/80",
     overlayTo: "to-[#4d5fff]/60",
     accentColor: "bg-[#4d5fff]",

@@ -5,6 +5,8 @@ import { prisma } from '@/lib/db';
 import { writeFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
+
+const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(process.cwd(), 'uploads');
 import sharp from 'sharp';
 
 export const dynamic = 'force-dynamic';
@@ -91,9 +93,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Create upload directory if not exists
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
+    if (!existsSync(UPLOAD_DIR)) {
+      await mkdir(UPLOAD_DIR, { recursive: true });
     }
 
     // Generate unique filename
@@ -101,7 +102,7 @@ export async function POST(req: NextRequest) {
     const randomStr = Math.random().toString(36).substring(7);
     const ext = path.extname(file.name);
     const filename = `${timestamp}-${randomStr}${ext}`;
-    const filepath = path.join(uploadDir, filename);
+    const filepath = path.join(UPLOAD_DIR, filename);
 
     // Convert file to buffer
     const bytes = await file.arrayBuffer();
@@ -126,7 +127,7 @@ export async function POST(req: NextRequest) {
     // Create media record
     const media = await prisma.media_assets.create({
       data: {
-        file_path: `/uploads/${filename}`,
+        file_path: `/api/uploads/${filename}`,
         original_name: file.name,
         mime_type: file.type,
         file_size_bytes: BigInt(file.size),

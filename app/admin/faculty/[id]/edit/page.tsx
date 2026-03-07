@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Save, ArrowLeft, Upload, X, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 interface Faculty {
   id: string;
@@ -506,11 +505,9 @@ export default function EditFacultyPage() {
                 {previewUrl ? (
                   <div className="relative">
                     <div className="w-full aspect-square rounded-lg overflow-hidden bg-gray-100">
-                      <Image
+                      <img
                         src={previewUrl}
                         alt="Profile preview"
-                        width={400}
-                        height={400}
                         className="w-full h-full object-cover"
                       />
                     </div>

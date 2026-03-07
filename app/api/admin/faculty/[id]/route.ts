@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -86,6 +87,9 @@ export async function PUT(
       },
     });
 
+    revalidatePath(`/faculty/${faculty.slug}`);
+    revalidatePath('/faculty');
+
     return NextResponse.json(faculty);
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -107,9 +111,13 @@ export async function DELETE(
 
   try {
     const { id } = await params;
-    await prisma.faculty.delete({
+    const faculty = await prisma.faculty.delete({
       where: { id },
+      select: { slug: true },
     });
+
+    revalidatePath(`/faculty/${faculty.slug}`);
+    revalidatePath('/faculty');
 
     return NextResponse.json({ message: 'Faculty deleted successfully' });
   } catch (error) {

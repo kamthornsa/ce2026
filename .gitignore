@@ -45,3 +45,5 @@ next-env.d.ts
 # uploaded media files (user content)
 /public/uploads/*
 !/public/uploads/.gitkeep
+/uploads/*
+!/uploads/.gitkeep
