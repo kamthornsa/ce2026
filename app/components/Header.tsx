@@ -3,12 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { useLanguage } from "@/app/contexts/LanguageContext";
-import { Globe } from "lucide-react";
+import { Globe, Menu, X } from "lucide-react";
 
 export default function Header() {
   const { language, setLanguage, t } = useLanguage();
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const navLinkClass = (href: string) => {
     const isActive =
@@ -19,6 +21,26 @@ export default function Header() {
         : "text-gray-700 hover:text-[#233dff]"
     }`;
   };
+
+  const mobileLinkClass = (href: string) => {
+    const isActive =
+      href === "/" ? pathname === "/" : pathname.startsWith(href);
+    return `block px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+      isActive
+        ? "text-[#233dff] bg-blue-50"
+        : "text-gray-700 hover:text-[#233dff] hover:bg-gray-50"
+    }`;
+  };
+
+  const navLinks = [
+    { href: "/", label: t("nav.home") },
+    { href: "/about", label: t("nav.about") },
+    { href: "/faculty", label: t("nav.faculty") },
+    { href: "/academics", label: t("nav.academics") },
+    { href: "/student-works", label: t("nav.studentWorks") },
+    { href: "/news", label: t("nav.news") },
+    { href: "/contact", label: t("nav.contact") },
+  ];
 
   return (
     <header className="sticky top-0 z-50 border-b bg-white shadow-sm">
@@ -42,31 +64,13 @@ export default function Header() {
             </div>
           </Link>
 
+          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="/" className={navLinkClass("/")}>
-              {t("nav.home")}
-            </Link>
-            <Link href="/about" className={navLinkClass("/about")}>
-              {t("nav.about")}
-            </Link>
-            <Link href="/faculty" className={navLinkClass("/faculty")}>
-              {t("nav.faculty")}
-            </Link>
-            <Link href="/academics" className={navLinkClass("/academics")}>
-              {t("nav.academics")}
-            </Link>
-            <Link
-              href="/student-works"
-              className={navLinkClass("/student-works")}
-            >
-              {t("nav.studentWorks")}
-            </Link>
-            <Link href="/news" className={navLinkClass("/news")}>
-              {t("nav.news")}
-            </Link>
-            <Link href="/contact" className={navLinkClass("/contact")}>
-              {t("nav.contact")}
-            </Link>
+            {navLinks.map(({ href, label }) => (
+              <Link key={href} href={href} className={navLinkClass(href)}>
+                {label}
+              </Link>
+            ))}
 
             {/* Language Switcher */}
             <div className="flex items-center gap-2 ml-4 border-l pl-4">
@@ -79,8 +83,48 @@ export default function Header() {
               </button>
             </div>
           </nav>
+
+          {/* Mobile: language + hamburger */}
+          <div className="flex md:hidden items-center gap-3">
+            <button
+              onClick={() => setLanguage(language === "th" ? "en" : "th")}
+              className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-[#233dff] transition-colors"
+            >
+              <Globe className="h-4 w-4" />
+              {language === "th" ? "EN" : "TH"}
+            </button>
+            <button
+              onClick={() => setMobileOpen((prev) => !prev)}
+              className="p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="md:hidden border-t bg-white shadow-lg">
+          <nav className="container mx-auto px-4 py-3 flex flex-col gap-1">
+            {navLinks.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={mobileLinkClass(href)}
+                onClick={() => setMobileOpen(false)}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
