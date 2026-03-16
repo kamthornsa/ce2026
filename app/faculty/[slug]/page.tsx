@@ -70,12 +70,12 @@ export default async function FacultyDetailPage({ params }: PageProps) {
   }
 
   // Debug: Log image data
-  console.log("Faculty Image Debug:", {
-    name: faculty.full_name_en,
-    profile_image_id: faculty.profile_image_id,
-    media_assets: faculty.media_assets,
-    file_path: faculty.media_assets?.file_path,
-  });
+  // console.log("Faculty Image Debug:", {
+  //   name: faculty.full_name_en,
+  //   profile_image_id: faculty.profile_image_id,
+  //   media_assets: faculty.media_assets,
+  //   file_path: faculty.media_assets?.file_path,
+  // });
 
   const personSchema = generatePersonSchema(faculty);
   const breadcrumbSchema = generateBreadcrumbSchema([
