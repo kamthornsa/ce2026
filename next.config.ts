@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
 };
 module.exports = {
+  serverExternalPackages: ["ldapjs"],
   async headers() {
     return [
       {

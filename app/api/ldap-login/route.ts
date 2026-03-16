@@ -28,9 +28,21 @@ export async function POST(req: NextRequest) {
 
   const { email: username, password: ldappass } = body;
 
-  return new Promise((resolve) => {
+  const ldapUrl = process.env.LDAP_URL;
+  const ldapBindDn = process.env.LDAP_BIND_DN;
+  const ldapBindPassword = process.env.LDAP_BIND_PASSWORD;
+  const ldapBaseDn = process.env.LDAP_BASE_DN;
+
+  if (!ldapUrl || !ldapBindDn || !ldapBindPassword || !ldapBaseDn) {
+    return NextResponse.json(
+      { status: "error", message: "LDAP configuration is missing" },
+      { status: 500 }
+    );
+  }
+
+  return new Promise<NextResponse>((resolve) => {
     const client = ldap.createClient({
-      url: process.env.LDAP_URL!,
+      url: ldapUrl,
     });
 
     client.on("error", () => {
@@ -43,7 +55,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Bind admin
-    client.bind(process.env.LDAP_BIND_DN!, process.env.LDAP_BIND_PASSWORD!, (err) => {
+    client.bind(ldapBindDn, ldapBindPassword, (err) => {
       if (err) {
         resolve(
           NextResponse.json(
@@ -57,7 +69,7 @@ export async function POST(req: NextRequest) {
       // Search user
       const filter = `(&(objectClass=inetOrgPerson)(uid=${escapeLdapFilter(username)}))`;
       client.search(
-        process.env.LDAP_BASE_DN!,
+        ldapBaseDn,
         { filter, scope: "sub" },
         (err, res) => {
           if (err) {
