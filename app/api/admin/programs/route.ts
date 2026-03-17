@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
-import slugify from 'slugify';
+import { createSlug } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 // Validation schemas
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
     const { program_files: filesData, ...programBody } = programSchema.parse(body);
 
     // Generate slug
-    let baseSlug = slugify(programBody.name_en, { lower: true, strict: true });
+    let baseSlug = await createSlug(programBody.name_en, 'program');
     let slug = baseSlug;
     let counter = 1;
 

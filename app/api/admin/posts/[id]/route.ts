@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
-import slugify from 'slugify';
+import { createSlug } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 const postSchema = z.object({
@@ -111,12 +111,13 @@ export async function PUT(
       if (tags.length > 0) {
         const tagRecords = await Promise.all(
           tags.map(async (tagName: string) => {
+            const tagSlug = await createSlug(tagName, 'tag');
             const tag = await prisma.tags.upsert({
               where: { name: tagName },
               update: {},
               create: {
                 name: tagName,
-                slug: (slugify(tagName, { lower: true, strict: true }).replace(/-+/g, '-').replace(/^-+|-+$/g, '') || 'tag'),
+                slug: tagSlug,
               },
             });
             return tag;

@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
-import slugify from 'slugify';
+import { createSlug } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 const pageSchema = z.object({
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
     const validated = pageSchema.parse(body);
 
     // Generate slug
-    let baseSlug = slugify(validated.title, { lower: true, strict: true });
+    let baseSlug = await createSlug(validated.title, 'page');
     let slug = baseSlug;
     let counter = 1;
 

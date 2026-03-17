@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { z } from 'zod';
-import slugify from 'slugify';
+import { createSlug } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 const facultySchema = z.object({
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     const data = facultySchema.parse(body);
 
     // Generate slug
-    const baseSlug = slugify(data.full_name_en, { lower: true, strict: true });
+    const baseSlug = await createSlug(data.full_name_en, 'faculty');
     let slug = baseSlug;
     let counter = 1;
 
