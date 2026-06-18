@@ -3,6 +3,7 @@ import { generateSEO, generateOrganizationSchema } from "@/lib/seo";
 import FocusAreas from "@/app/components/FocusAreas";
 import HeroSection from "@/app/components/HeroSection";
 import HomeContent from "@/app/components/HomeContent";
+import PhilosophyBanner from "@/app/components/PhilosophyBanner";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
@@ -67,6 +68,9 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
       />
+
+      {/* Educational Philosophy */}
+      <PhilosophyBanner />
 
       {/* Hero Section */}
       <HeroSection />

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/app/contexts/LanguageContext";
 
@@ -78,12 +79,13 @@ export default function HomeContent({
                     >
                       {idx === 0 ? (
                         <article className="rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
-                          <div className="w-full h-48 bg-gradient-to-br from-blue-100 to-indigo-100 overflow-hidden">
+                          <div className="w-full h-48 bg-gradient-to-br from-blue-100 to-indigo-100 overflow-hidden relative">
                             {post.media_assets?.file_path && (
-                              <img
+                              <Image
                                 src={post.media_assets.file_path}
                                 alt={post.media_assets.alt_text || post.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-300"
                               />
                             )}
                           </div>
@@ -109,12 +111,13 @@ export default function HomeContent({
                         </article>
                       ) : (
                         <article className="flex gap-3 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow p-3">
-                          <div className="flex-shrink-0 w-20 h-20 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 overflow-hidden">
+                          <div className="flex-shrink-0 w-20 h-20 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 overflow-hidden relative">
                             {post.media_assets?.file_path && (
-                              <img
+                              <Image
                                 src={post.media_assets.file_path}
                                 alt={post.media_assets.alt_text || post.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-300"
                               />
                             )}
                           </div>

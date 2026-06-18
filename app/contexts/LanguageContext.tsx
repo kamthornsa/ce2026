@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 type Language = "th" | "en";
 
@@ -135,6 +135,9 @@ const translations = {
     "news.filter.news": "ข่าวสาร",
     "news.filter.event": "กิจกรรม",
     "news.noResults": "ไม่มีรายการในขณะนี้",
+
+    "home.philosophy.title": "ปรัชญาการศึกษา",
+    "home.philosophy.text": "ประสบการณ์สร้างการเรียนรู้สู่มืออาชีพ",
 
     "home.section.news": "ข่าวและแจ้งเตือน",
     "home.section.events": "กิจกรรม",
@@ -305,6 +308,9 @@ const translations = {
     "news.filter.event": "Events",
     "news.noResults": "No items available at this time.",
 
+    "home.philosophy.title": "Educational Philosophy",
+    "home.philosophy.text": "Experiential Learning for Becoming Professionals",
+
     // Homepage Sections
     "home.section.news": "News & Announcements",
     "home.section.events": "Events",
@@ -355,15 +361,11 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 );
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("th");
-
-  // Load language from localStorage on mount
-  useEffect(() => {
+  const [language, setLanguageState] = useState<Language>(() => {
+    if (typeof window === "undefined") return "th";
     const saved = localStorage.getItem("language") as Language;
-    if (saved && (saved === "th" || saved === "en")) {
-      setLanguageState(saved);
-    }
-  }, []);
+    return saved === "th" || saved === "en" ? saved : "th";
+  });
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
