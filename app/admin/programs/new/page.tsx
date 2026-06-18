@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Save, ArrowLeft, Upload, FileText, Trash2 } from "lucide-react";
 import Link from "next/link";
+import RichTextEditor from "@/app/admin/components/RichTextEditor";
 
 interface ProgramFileState {
   file_id: string;
@@ -89,7 +90,7 @@ export default function NewProgramPage() {
         const data = await response.json();
         alert(data.error || "Failed to create program");
       }
-    } catch (error) {
+    } catch {
       alert("An error occurred");
     } finally {
       setIsLoading(false);
@@ -178,37 +179,35 @@ export default function NewProgramPage() {
                     onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   >
-                    <option value="bachelor">Undergraduate (Bachelor's)</option>
-                    <option value="master">Master's</option>
+                    <option value="bachelor">Undergraduate (Bachelor&apos;s)</option>
+                    <option value="master">Master&apos;s</option>
                     <option value="doctoral">Doctoral</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Overview (HTML)
+                    Overview
                   </label>
-                  <textarea
-                    name="overview_html"
-                    rows={6}
+                  <RichTextEditor
                     value={formData.overview_html}
-                    onChange={handleChange}
-                    placeholder="<p>Program overview...</p>"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"
+                    onChange={(html) =>
+                      setFormData((prev) => ({ ...prev, overview_html: html }))
+                    }
+                    placeholder="Write program overview here..."
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Study Plan (HTML)
+                    Study Plan
                   </label>
-                  <textarea
-                    name="study_plan_html"
-                    rows={8}
+                  <RichTextEditor
                     value={formData.study_plan_html}
-                    onChange={handleChange}
-                    placeholder="<p>Study plan details...</p>"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"
+                    onChange={(html) =>
+                      setFormData((prev) => ({ ...prev, study_plan_html: html }))
+                    }
+                    placeholder="Write study plan details here..."
                   />
                 </div>
               </div>

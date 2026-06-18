@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Save, ArrowLeft, Upload, X, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
+import RichTextEditor from "@/app/admin/components/RichTextEditor";
 
 interface Faculty {
   id: string;
@@ -328,15 +329,14 @@ export default function EditFacultyPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Biography (HTML)
+                    Biography
                   </label>
-                  <textarea
-                    name="bio_html"
-                    rows={6}
+                  <RichTextEditor
                     value={formData.bio_html}
-                    onChange={handleChange}
-                    placeholder="<p>Biography content...</p>"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"
+                    onChange={(html) =>
+                      setFormData((prev) => ({ ...prev, bio_html: html }))
+                    }
+                    placeholder="Write faculty biography here..."
                   />
                 </div>
               </div>

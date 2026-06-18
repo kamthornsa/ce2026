@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Save, ArrowLeft, Upload, X, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import RichTextEditor from "@/app/admin/components/RichTextEditor";
 
 export default function NewFacultyPage() {
   const router = useRouter();
@@ -50,7 +52,7 @@ export default function NewFacultyPage() {
         const data = await response.json();
         alert(data.error || "Failed to create faculty member");
       }
-    } catch (error) {
+    } catch {
       alert("An error occurred");
     } finally {
       setIsLoading(false);
@@ -119,7 +121,7 @@ export default function NewFacultyPage() {
       } else {
         throw new Error("Upload failed");
       }
-    } catch (error) {
+    } catch {
       alert("Failed to upload image");
       setPreviewUrl(null);
     } finally {
@@ -249,15 +251,14 @@ export default function NewFacultyPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Biography (HTML)
+                    Biography
                   </label>
-                  <textarea
-                    name="bio_html"
-                    rows={6}
+                  <RichTextEditor
                     value={formData.bio_html}
-                    onChange={handleChange}
-                    placeholder="<p>Biography content...</p>"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"
+                    onChange={(html) =>
+                      setFormData((prev) => ({ ...prev, bio_html: html }))
+                    }
+                    placeholder="Write faculty biography here..."
                   />
                 </div>
               </div>
@@ -425,11 +426,12 @@ export default function NewFacultyPage() {
                 {/* Image Preview */}
                 {previewUrl ? (
                   <div className="relative">
-                    <div className="w-full aspect-square rounded-lg overflow-hidden bg-gray-100">
-                      <img
+                    <div className="w-full aspect-square rounded-lg overflow-hidden bg-gray-100 relative">
+                      <Image
                         src={previewUrl}
                         alt="Profile preview"
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     </div>
                     <button
