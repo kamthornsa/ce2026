@@ -12,6 +12,7 @@ import {
   Loader2,
 } from "lucide-react";
 import Image from "next/image";
+import RichTextEditor from "@/app/admin/components/RichTextEditor";
 
 interface AssetImage {
   file_id: string;
@@ -318,15 +319,14 @@ export default function EditStudentWorkPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Content (HTML)
+                    Content
                   </label>
-                  <textarea
-                    name="html_content"
-                    rows={12}
+                  <RichTextEditor
                     value={formData.html_content}
-                    onChange={handleChange}
-                    placeholder="<p>Detailed description...</p>"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"
+                    onChange={(html) =>
+                      setFormData((prev) => ({ ...prev, html_content: html }))
+                    }
+                    placeholder="Detailed description..."
                   />
                 </div>
               </div>
